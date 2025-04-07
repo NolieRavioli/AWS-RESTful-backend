@@ -15,7 +15,7 @@ This project was built using AWS Free Tier Lambda and API Gateway to create a in
   - [How It Works](#how-it-works)
 - [nolanpeet.us](#nolanpeetus-external-link)
 - [gfd.sh](#gfdsh-external-link)
-
+---
 ## Architecture Overview
 
 - **Serverless Architecture:**  
@@ -51,7 +51,7 @@ This project was built using AWS Free Tier Lambda and API Gateway to create a in
 
 5. **Response Aggregation:**  
    After processing, the Lambda function forwards the request to the selected external endpoint, gathers the response, and sends it back to API Gateway. Finally, API Gateway returns the response to the user in the correct format.
-
+--
 ## [nolanpeet.us](https://nolanpeet.us) (external link)  
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us)]
 
@@ -61,8 +61,6 @@ opportunity to explore the limits and capabilities of serverless architecture. M
 I spent a ton of time hand-coding HTML and CSS for the webpage. It was cool  This project was especially exciting because of Amazon Q. I like to use ChatGPT to code but this was my first experience having an integrated assistant 
 inside the coding environment (I use IDLE). It felt really nice to tab complete whole codeblocks with just a single line to nucleate from. Also, if I forget how to do a specific function I can just comment what I want to be done in
 pseudo-code or plaintext and have the integrated assistant help me remember syntax!
-
----
 
 ## [gfd.sh](https://gfd.sh/)(external link)
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)]

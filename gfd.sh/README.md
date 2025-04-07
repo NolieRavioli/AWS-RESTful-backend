@@ -1,5 +1,16 @@
 # [gfd.sh](https://gfd.sh/)(external link)
 
+### Table of Contents
+- [gfd.sh](#gfdsh-external-link)
+  - [Introduction](#introduction)
+  - [Architecture Overview](#architecture-overview)
+  - [Lambda Functions Detail](#lambda-functions-detail)
+  - [Frontend Implementation](#frontend-implementation)
+  - [Example Workflow](#example-workflow)
+  - [Challenges & Solutions](#challenges--solutions)
+    - [My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.](#my-journey-from-dynamodb-to-rds-to-timestream-and-self-hosting-with-a-backup)
+  - [Conclusion](#conclusion)
+
 ## Introduction
 
 The "temp" endpoint is part of my AWS-powered serverless ecosystem, designed to provide a responsive, interactive, and informative web-based graphical interface for viewing real-time and historical sensor data. The setup leverages AWS API Gateway integrated with two distinct AWS Lambda functions, each performing specialized tasks. The goal was to build a scalable, easily maintainable, and entirely serverless application that efficiently visualizes environmental data like temperature and humidity.

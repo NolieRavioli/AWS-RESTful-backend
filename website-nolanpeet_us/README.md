@@ -15,6 +15,35 @@ psydo-code or plaintext and have the integrated assistant help me remember synta
 
 Embarking on this project, I was eager to understand what "RESTful" applications and serverless architecture truly entailed. The experience turned abstract concepts into tangible components—each AWS service played a distinct role in the system. 
 For instance, API Gateway handles incoming HTTP requests, while Lambda functions execute the backend logic on demand.
+
+Here is the main logic happening in the python code. This is what serves my pages:
+```
+if http_method == "GET":
+    # Process GET as before
+    path = event["path"]
+    if path != '/':
+        path_parts = path.split('/')
+        if path[0] == '/':
+            path_parts = path_parts[1:]
+        file_path = os.path.join(os.path.dirname(__file__), "www", *path_parts, "index.html")
+    else:
+        file_path = os.path.join(os.path.dirname(__file__), "www", "index.html")
+  
+    try:
+        with open(file_path, "r") as f:
+            html_content = f.read()
+        return {
+            "statusCode": 200,
+            "headers": { "Content-Type": "text/html" },
+            "body": html_content
+        }
+    except FileNotFoundError:
+        return {
+            "statusCode": 404,
+            "headers": {"Content-Type": "text/plain"},
+            "body": "404 Not Found"
+        }
+```
 This architecture not only reduces the overhead of maintaining a traditional server but also scales dynamically based on traffic. The project has been a practical lesson in balancing the trade-offs between resource limitations, performance, and cost, 
 particularly when operating within the boundaries of the AWS Free Tier.
 

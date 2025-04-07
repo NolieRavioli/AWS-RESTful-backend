@@ -4,10 +4,6 @@ A comprehensive document describing how my RESTful, free, AWS-powered websites w
 
 Educational documentation of development process, complete with source code.
 
-## Intro
-
-This project was built using AWS Free Tier Lambda and API Gateway to create a interface that aggregates content from internal Lambda functions and external sources. The goal was to create a no-cost data hosting solution starting with gfd.sh as a cloud-based endpoint for tempurature data. nolanpeet.us is a portfolio website framework that attempts to create a serverless portfolio without external references. I did a lot of html by hand for the finished product, but Amazon Q is so exciting. I like to use ChatGPT to code but this was my first experience having an integrated assistant inside the coding environment (I use IDLE mostly).
-
 ### Table of Contents
 - AWS-RESTful-backend
   - [Intro](#intro)
@@ -27,6 +23,11 @@ This project was built using AWS Free Tier Lambda and API Gateway to create a in
   - [Challenges & Solutions](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh#challenges--solutions)
     - [My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh#my-journey-from-dynamodb-to-rds-to-timestream-and-self-hosting-with-a-backup)
   - [Conclusion](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh#my-journey-from-dynamodb-to-rds-to-timestream-and-self-hosting-with-a-backup)
+
+## Intro
+
+This project was built using AWS Free Tier Lambda and API Gateway to create a interface that aggregates content from internal Lambda functions and external sources. The goal was to create a no-cost data hosting solution starting with gfd.sh as a cloud-based endpoint for tempurature data. nolanpeet.us is a portfolio website framework that attempts to create a serverless portfolio without external references. I did a lot of html by hand for the finished product, but Amazon Q is so exciting. I like to use ChatGPT to code but this was my first experience having an integrated assistant inside the coding environment (I use IDLE mostly).
+
 ---
 ## Architecture Overview
 

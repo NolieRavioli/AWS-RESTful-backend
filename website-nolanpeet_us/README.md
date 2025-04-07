@@ -1,7 +1,5 @@
 # AWS-RESTful-backend
 
-A guide and documentation for my AWS-powered, serverless load-balancer project.
-
 ## Intro
 
 This website was designed to serve as a functional model of my knowledge base and custom framework. The inherent challenges of building a serverless website using AWS Lambda functions was a really interesting

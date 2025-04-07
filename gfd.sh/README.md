@@ -16,7 +16,7 @@ The "temp" endpoint consists of:
 
 ### AWS API Gateway Proxy Integration (`proxy+`)
 
-API Gateway�s `proxy+` integration routes all incoming HTTP requests directly to Lambda functions without detailed manual mapping. This integration forwards the entire request payload, headers, query strings, and path parameters directly to Lambda, simplifying configuration.
+API Gateway’s `proxy+` integration routes all incoming HTTP requests directly to Lambda functions without detailed manual mapping. This integration forwards the entire request payload, headers, query strings, and path parameters directly to Lambda, simplifying configuration.
 
 #### Importance of Proxy Integration:
 - **Flexibility**: Automatically forwards complex or changing HTTP requests to Lambda.
@@ -88,14 +88,29 @@ The frontend HTML utilizes the Chart.js library to render dynamic, interactive g
 
 ## Challenges & Solutions
 
-- **Challenge**: Handling large data payloads within Lambda�s constraints.
+- **Challenge**: Handling large data payloads within Lambda’s constraints.
   - **Solution**: Aggregating and summarizing data to reduce payload size without sacrificing detail.
 
 - **Challenge**: Maintaining data integrity through complex request structures.
-  - **Solution**: Leveraging API Gateway�s proxy+ integration and Lambda integration passthrough to maintain request fidelity.
+  - **Solution**: Leveraging API Gateway’s proxy+ integration and Lambda integration passthrough to maintain request fidelity.
 
 - **Challenge**: Providing a responsive user experience despite Lambda's cold-start latency.
   - **Solution**: Implementing lightweight JSON responses and using frontend caching or asynchronous loading.
+
+### My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.
+
+I started this project by initially storing 12-byte sensor data in **Amazon DynamoDB**. The convenience of a cloud-hosted NoSQL database was appealing. However, I quickly discovered that DynamoDB was storing my tiny 94-bit data points in 1KB increments—leading to storage bloat. It cost me about 2 cents per day, but I was uneasy about the overhead. 
+
+Next, I experimented with **Amazon RDS** (MySQL/Postgres) for more direct control over schema and data structure. While it solved the overhead issue, RDS’s free tier eventually expires, and I was worried about incurring monthly charges for a project that only stores a handful of bytes daily.
+
+Then I moved on to **Amazon Timestream**, hoping its time-series optimizations would make sense for small, frequent sensor updates. Unfortunately, Timestream enforces a billing floor of 100GB-month—even if you only store a few MB of data—leading to an unexpectedly high daily cost. That was a deal-breaker for my near-$0 budget.
+
+In the end, I realized that **Amazon S3** is the perfect, nearly free archival solution for once-a-day backups. I can push tiny daily files, pay just fractions of a cent per month in storage, and rely on S3 for reliable, long-term backups. Meanwhile, for live data, I switched to a self-hosted approach: a lightweight service on my own Ubuntu server writing raw sensor data to a .bin file. Once per day, that file gets uploaded to S3. If my server goes down, I can always fall back on S3 data through my AWS Lambda.
+
+All these iterations taught me valuable lessons about how each AWS service fits particular use cases. For extremely small daily writes, S3 is virtually free. DynamoDB is great for serverless key-value at scale, but not as lean for 12-byte items. RDS and Timestream are powerful but can be expensive at minimal data volumes.
+
+In the end, I combined the best of both worlds: **self-hosting** for real-time data retrieval and **S3** for cheap cloud storage. This synergy keeps my system cost near zero while ensuring the data is always backed up in the cloud. I’m excited to keep exploring serverless tech and optimizing this architecture!
+
 
 ## Conclusion
 

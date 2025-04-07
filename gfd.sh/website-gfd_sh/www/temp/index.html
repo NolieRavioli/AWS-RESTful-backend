@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="application-name" content="Temperature Graph">
+    <meta name="author" content="Nolan Peet">
+    <meta name="description" content="Temperature graph using chart.js">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sensor Data Graphs</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.42/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script>
+        cnames = ['Pipe by front door', 'Inside - Upstairs', 'Outside'];
+        colors = {
+            'temp': ['rgb(200, 29, 29)', 'rgb(29, 200, 29)', 'rgb(29, 29, 200)'],
+            'humidity': ['rgb(140, 59, 89)', 'rgb(59, 140, 89)', 'rgb(59, 89, 140)']
+        };
+    </script>
+
+    <style>
+        /* Ensure the entire page fills the viewport */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* Parent container using flex, spanning the full viewport */
+        #bodyContainer {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #b7c6c7;
+        }
+
+        /* Top controls and bottom table take natural height */
+        #topControls,
+        #bottomTable {
+            flex: 0 0 auto;
+            background-color: #b7c6c7;
+        }
+
+        /* Chart container fills remaining space */
+        #chartContainer {
+            flex: 1 1 auto;
+            position: relative;  /* Useful if you need positioning */
+            overflow: hidden;    /* Hide overflow if canvas is larger */
+            background-color: #b7c6c7;
+        }
+
+        /* Canvas fills its container */
+        #sensorGraph {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Example styles for table/buttons (adjust as needed) */
+        .channel-btn {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #dad;
+            background-color: #f8f8f8;
+            cursor: pointer;
+        }
+        .channel-btn.active {
+            background-color: #979797;
+        }
+        .channel-btn:hover,
+        button:hover {
+            background-color: #ccc;
+        }
+        .sensor-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .sensor-table th,
+        .sensor-table td {
+            padding: 5px;
+            text-align: left;
+        }
+        .sensor-table th {
+            background-color: #ced7ff;
+        }
+        .sensor-table td {
+            background-color: #d5ecf5;
+        }
+    </style>
+</head>
+<body>
+    <div id="bodyContainer">
+        <!-- Top Controls -->
+        <div id="topControls">
+            <table width="100%">
+                <tr style="display:flex;justify-content: space-around;">
+                    <td align="center">
+                        <div id="channel-btn-group">
+                            <button id="channel1Btn" class="channel-btn active">Channel 1</button>
+                            <button id="channel2Btn" class="channel-btn active">Channel 2</button>
+                            <button id="channel3Btn" class="channel-btn active">Channel 3</button>
+                        </div>
+                        <div align="center" id='channelOptions' style="display: inline-block;">
+                            <label><input type="checkbox" id="tempCheckbox" checked> Temperature</label>
+                            <label><input type="checkbox" id="humidityCheckbox"> Humidity</label>
+                        </div>
+                    </td>
+                    <td class="temperature-controls" align="right" style="display: block;">
+                        <p style="margin-top: 0px;">Made by Nolan Peet</p>
+                        <label for="tempUnitSelect">Temperature Unit:</label>
+                        <select id="tempUnitSelect">
+                            <option value="F">Fahrenheit</option>
+                            <option value="C">Celsius</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Chart fills leftover space -->
+        <div id="chartContainer">
+            <canvas id="sensorGraph"></canvas>
+        </div>
+
+        <!-- Bottom table with totals -->
+        <div id="bottomTable">
+            <table class="sensor-table">
+                <thead>
+                    <tr>
+                        <th id="ch1Head">Channel 1</th>
+                        <th id="ch2Head">Channel 2</th>
+                        <th id="ch3Head">Channel 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr title="Total">
+                        <td id="channel1Total">...</td>
+                        <td id="channel2Total">...</td>
+                        <td id="channel3Total">...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+        let chartData = {};
+        let activeChannels = [true, true, true];
+        let minDate, maxDate, scaleMin, scaleMax;
+
+        function fetchAndRenderData() {
+            fetch('https://gfd.sh/temp/data')
+                .then(response => response.json())
+                .then(rows => {
+
+                    // Build the channel-based structure the rest of the code expects
+                    const nowMs = Date.now();
+                    const fiveMinAgoMs = nowMs - (5 * 60 * 1000);
+
+                    // Initialize chartData with channels 1..3
+                    const newChartData = {
+                        1: {
+                            data_points: [],
+                            batteryLow: "No data",
+                            signalStrength: null,
+                            total_entries: 0,
+                            recent_entries: 0,
+                            max_timestamp: 0
+                        },
+                        2: {
+                            data_points: [],
+                            batteryLow: "No data",
+                            signalStrength: null,
+                            total_entries: 0,
+                            recent_entries: 0,
+                            max_timestamp: 0
+                        },
+                        3: {
+                            data_points: [],
+                            batteryLow: "No data",
+                            signalStrength: null,
+                            total_entries: 0,
+                            recent_entries: 0,
+                            max_timestamp: 0
+                        }
+                    };
+
+                    rows.forEach(row => {
+                        const ch = parseInt(row.channel, 10);
+                        if (![1, 2, 3].includes(ch)) return; // skip unexpected channels
+
+                        // Convert numeric fields
+                        const rawTemp = parseInt(row.rawTemp, 10);
+                        const humidity = parseInt(row.humidity, 10);
+                        const sigStr = parseInt(row.signalStrength, 10);
+
+                        // Convert the row time to a moment so we can compare
+                        const tsMoment = moment.utc(row.sensor_timestamp);
+                        const tsMs = tsMoment.valueOf();
+
+                        // Push the data point
+                        newChartData[ch].data_points.push({
+                            timestamp: row.sensor_timestamp,   // keep as string or convert to local
+                            rawTemp: rawTemp,
+                            humidity: humidity
+                        });
+
+                        // Bump total_entries
+                        newChartData[ch].total_entries++;
+
+                        // Check if it's "recent" (past 5 min)
+                        if (tsMs > fiveMinAgoMs) {
+                            newChartData[ch].recent_entries++;
+                        }
+
+                        // Convert batteryLow from "true"/"false" to 1/0
+                        newChartData[ch].batteryLow = parseInt(row.batteryLow, 10) === 1 ? 1 : 0;
+
+                        // Update signalStrength only if this record is the newest for this channel
+                        if (tsMs > newChartData[ch].max_timestamp) {
+                            newChartData[ch].max_timestamp = tsMs;
+                            newChartData[ch].signalStrength = sigStr;
+                        }
+                    });
+
+                    // Now we have the channel-based structure the rest of your code expects
+                    chartData = newChartData;
+
+                    // If channel 1 has data_points, compute minDate/maxDate
+                    if (chartData[1].data_points.length > 0) {
+                        const timestamps = chartData[1].data_points.map(p =>
+                            moment.utc(p.timestamp).tz("America/Denver")
+                        );
+                        minDate = moment.min(timestamps);
+                        maxDate = moment.max(timestamps);
+                        scaleMin = minDate;
+                        scaleMax = maxDate;
+                    } else {
+                        // Provide some default if channel 1 is empty
+                        minDate = moment();
+                        maxDate = moment();
+                        scaleMin = moment().subtract(1, 'days');
+                        scaleMax = moment();
+                    }
+
+                    // Proceed with any channel headings, battery statuses, etc.
+                    for (let channel = 1; channel <= 3; channel++) {
+                        const chHead = document.getElementById(`ch${channel}Head`);
+                        if (!chHead) continue;
+
+                        // Because your code checks if batteryRaw === 1 => 'LOW'
+                        // else => 'OK' or 'No data'
+                        const batteryRaw = chartData[channel].batteryLow;
+                        const batteryStatus = batteryRaw === 1 ? "LOW" : "OK";
+                        const sigStrength = chartData[channel].signalStrength !== null ? chartData[channel].signalStrength : "No Data";
+                        chHead.textContent = `${cnames[channel - 1]} - Battery ${batteryStatus} - SigStrength: ${sigStrength}`;
+
+                        // Show total_entries, recent_entries, etc.
+                        const totalEntriesElement = document.getElementById(`channel${channel}Total`);
+                        //const recentEntriesElement = document.getElementById(`channel${channel}Recent`);
+                        if (totalEntriesElement) {
+                            totalEntriesElement.textContent = `Total: ${chartData[channel].total_entries}`;
+                        }
+                        //if (recentEntriesElement) {
+                        //  recentEntriesElement.textContent = `Recent: ${chartData[channel].recent_entries}`;
+                        //}
+                    }
+
+                    // Finally, draw the chart
+                    renderChart();
+                })
+                .catch(error => {
+                    console.error('Error fetching data: ', error);
+                });
+        }
+
+        function toggleChannel(channel) {
+            activeChannels[channel - 1] = !activeChannels[channel - 1];
+            const button = document.getElementById(`channel${channel}Btn`);
+            if (button) button.classList.toggle('active');
+
+            let optionsDisplay = activeChannels.includes(true) ? "block" : "none";
+            document.getElementById('channel-btn-group').style.display = optionsDisplay;
+
+            renderChart();
+        }
+
+        Chart.defaults.elements.line.spanGaps = true;
+
+        function renderChart() {
+            const ctx = document.getElementById('sensorGraph').getContext('2d');
+            const datasets = [];
+
+            for (let channel = 1; channel <= 3; channel++) {
+                if (activeChannels[channel - 1]) {
+                    // Temperature dataset
+                    if (document.getElementById('tempCheckbox').checked) {
+                        const tempUnit = document.getElementById('tempUnitSelect').value;
+                        datasets.push({
+                            label: `${cnames[channel - 1]} - Temperature (${tempUnit})`,
+                            parsing: false, // <-- IMPORTANT!
+                            data: chartData[channel]['data_points'].map(point => {
+                                const localTime = moment.utc(point.timestamp).tz("America/Denver");
+                                return {
+                                    x: localTime.toDate(), // format as Date object
+                                    y: tempUnit === 'C'
+                                        ? (point.rawTemp - 1000) / 10
+                                        : (9 / 5) * (((point.rawTemp - 1000)) / 10) + 32
+                                };
+                            }),
+                            pointRadius: 0,
+                            borderColor: colors['temp'][channel - 1],
+                            fill: false,
+                            tension: 0,
+                            spanGaps: true,
+                        });
+                    }
+                    // Humidity dataset
+                    if (document.getElementById('humidityCheckbox').checked) {
+                        datasets.push({
+                            label: `${cnames[channel - 1]} - Humidity (%)`,
+                            parsing: false,
+                            data: chartData[channel]['data_points'].map(point => {
+                                const localTime = moment.utc(point.timestamp).tz("America/Denver");
+                                return {
+                                    x: localTime.toDate(),
+                                    y: point.humidity
+                                };
+                            }),
+                            pointRadius: 0,
+                            borderColor: colors['humidity'][channel - 1],
+                            fill: false,
+                            tension: 0,
+                            spanGaps: true
+                        });
+                    }
+                }
+            }
+
+            // Optionally, set labels using converted times from channel 1
+            const labels = chartData[1]['data_points'].map(point =>
+                moment.utc(point.timestamp).tz("America/Denver").format("YYYY-MM-DD HH:mm:ss")
+            );
+
+            if (chart) chart.destroy(); // Destroy previous instance if exists
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0 // Must be zero for decimation to work
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animations: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                parser: "YYYY-MM-DD HH:mm:ss",
+                                unit: 'day',
+                                minUnit: 'second',
+                                stepSize: 1,
+                                tooltipFormat: "MMMM D, 'YY hh:mm:ss.SSS a",
+                                displayFormats: {
+                                    month: 'MMM',
+                                    day: 'MMM D',
+                                    hour: 'hA',
+                                    minute: 'h:mm a',
+                                    second: 'h:mm:ss a'
+                                }
+                            },
+                            ticks: {
+                                alignToPixels: true,
+                                display: true,
+                                source: 'auto',
+                                autoSkip: false,
+                                maxRotation: 90,
+                                minRotation: 80,
+                                font: {
+                                    size: 8
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        //legend: {
+                        //    labels: {
+                        //        boxWidth: 15,
+                        //        generateLabels: function (chart) {
+                        //            const original = Chart.defaults.plugins.legend.labels.generateLabels;
+                        //            const labels = original(chart);
+                        //            labels.forEach(label => {
+                        //                label.text = ''; // Remove the text, but keep the colored box and click functionality.
+                        //            });
+                        //            return labels;
+                        //        }
+                        //    }
+                        //},
+                        tooltip: {
+                            mode: 'nearest',
+                            intersect: false,
+                            bodyFont: {
+                                size: 10
+                            },
+                            titleFont: {
+                                size: 10
+                            }
+                        },
+                        zoom: {
+                            pan: {
+                                enabled: true,
+                                mode: 'x'
+                            },
+                            limits: {
+                                x: {
+                                    min: scaleMin,
+                                    max: scaleMax
+                                }
+                            },
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                    mode: 'x',
+                                    modifierKey: 'ctrl'
+                                },
+                                pinch: {
+                                    enabled: true,
+                                    mode: 'x'
+                                },
+                                mode: 'x',
+                                onZoom: function ({ chart }) {
+                                    const range = chart.scales.x.max - chart.scales.x.min;
+                                    if (range < 200000) {
+                                        chart.options.scales.x.time.stepSize = 10;
+                                        chart.options.scales.x.time.unit = 'second';
+                                    } else if (range < 5000000) {
+                                        chart.options.scales.x.time.unit = 'minute';
+                                    } else if (range < 86400000) {
+                                        chart.options.scales.x.time.unit = 'hour';
+                                    } else if (range < 2592000000) {
+                                        chart.options.scales.x.time.unit = 'day';
+                                    } else {
+                                        chart.options.scales.x.time.unit = 'month';
+                                    }
+                                    chart.update();
+                                }
+                            }
+                        },
+                        decimation: {
+                            enabled: true,
+                            algorithm: 'lttb',
+                            samples: 100,
+                            threshold: 100
+                        }
+                    }
+                }
+            });
+            chart.update();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Channel buttons
+            document.getElementById('channel1Btn').addEventListener('click', function () { toggleChannel(1); });
+            document.getElementById('channel2Btn').addEventListener('click', function () { toggleChannel(2); });
+            document.getElementById('channel3Btn').addEventListener('click', function () { toggleChannel(3); });
+
+            // Chart options
+            document.getElementById('tempCheckbox').addEventListener('click', renderChart);
+            document.getElementById('humidityCheckbox').addEventListener('click', renderChart);
+            document.getElementById('tempUnitSelect').addEventListener('change', renderChart);
+
+            // Initial load
+            fetchAndRenderData();
+        });
+    </script>
+
+</body>
+</html>

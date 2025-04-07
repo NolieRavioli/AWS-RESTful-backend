@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nolan Peet" />
+    <meta name="description" content="gfd.sh - AWS RESTful framework. Powered by Python." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Welcome to gfd.sh</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        font-family: "Times New Roman", serif;
+      }
+      h1 {
+        background-color: #135d63;
+        color: white;
+        font-size: 3rem;
+        font-weight: 300;
+        margin: 0;
+        padding: 1rem;
+        text-align: center;
+      }
+      h2 {
+        font-weight: normal;
+        padding-top: 1rem;
+      }
+      h3 {
+        padding-left: 1rem;
+      }
+      p {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 3rem;
+        padding-right: 3rem;
+      }
+      a {
+        color: #0073bb;
+        text-decoration: underline;
+      }
+      a:hover {
+        text-decoration: dashed;
+      }
+      #top {
+        background-color: #083270;
+        padding: 1rem;
+        color: white;
+        text-align: left;
+      }
+      #bottom {
+        background-color: #d5dbdb;
+        padding-bottom: 3rem;
+        padding: 0.5rem;
+      }
+      #list {
+        display: inline-block;
+        margin-left:3rem;
+        padding-right: 0.5rem;
+        border-radius: 15px;
+        border: 1px solid #135d63;
+      }
+      #list ul {
+        list-style: circle; /* Removes bullet points */
+      }
+      #urls {
+        font-family: "Courier New", Courier, monospace;
+      }
+      #footer {
+        background-color: #97cde25b;
+        padding-left:0.5rem;
+        padding-bottom:0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello!</h1>
+    <div id="top" class="section">
+      <p>this is an aws free tier thing that uses api gateway and lambda to create a RESTful website powered by python. AWS provides a framework for my self-hosted endpoints. AWS can act as low-cost backup for structured data like from my temp sensors. Lambda functions will load-balance for always-accessible data through self-hosting and S3 buckets.</p>
+      <div>
+        <div><h3><a href="https://cpu1.nolp.net/temp" target="_blank" rel="noopener noreferrer">Cabin Temperature Main Server</a></h3></div>
+        <div><h3><a href="/temp/" target="_blank" rel="noopener noreferrer">AWS Temp Backup Server (SLOW)</a></h3></div>
+      </div>
+    </div>
+    <div id="bottom" class="section">
+      <div id="list">
+        <!-- TODO LIST -->
+        <p>TODO:</p>
+        <ul>
+          <li>Make buttons so they don't disappear when all are disabled.</li>
+          <li>Autoscale x-axis to 1 week by default</li>
+          <li>S3 crontab</li>
+          <li>Send ALL datapoints to self-host (no local binary aggregating) (NEW SSH ENDPOINT REQUIRED)</li>
+        </ul>
+      </div>
+      <div>
+        <!-- NEW ENTRIES HERE 
+        <p></p> -->
+        
+        <p>I have finished with my temperature monitoring project. It uses a raspberry pi and 433mHz radio hygrometers to record and graph historic tempurature data at my cabin. The data packing was the most interesting part of this project for me. After recieving and validating the radio transmission through the GPIO pins, we pack each datapoint into 94 bits (timestamp, rawTemp, humidity, channel, batterySignal, etc...). These bits are stored in a binary file. According to my calculations, (3x4x60x24x94 = 1,624,320 bits per day = 203,040 bytes per day = 145 years to fill 10GB of storage), I'll be able to record data forever. </p>
+      </div>
+      <div id="footer">
+        <h2>Here are some domains I have:</h2>
+        <div id="urls">
+          <h3><b><a href="https://gfd.sh" >https://gfd.sh</a> (AWS temp monitoring, You Are Here)</b></h3>
+          <h3><b> → <a href="https://gfd.sh/temp" >https://gfd.sh/temp</a> Cabin Temps (AWS load-balanced)</b></h3>
+          <h3><b><a href="https://nolp.net" target="_blank" rel="noopener noreferrer">https://nolp.net</a> (self-hosted intranetwork with a few public endpoints, authenticated dashboard)</b></h3>
+          <h3><b> → <a href="https://cpu1.nolp.net/temp" target="_blank" rel="noopener noreferrer">https://cpu1.nolp.net/temp</a> Cabin Temps (self-hosted)</b></h3>
+          <h3><b><a href="https://nolanpeet.us" target="_blank" rel="noopener noreferrer">https://nolanpeet.us</a> (personal website)</b></h3>
+          <h3><b><a href="https://ffqq.gg" target="_blank" rel="noopener noreferrer">https://ffqq.gg</a> (for gaming, website endpoints hidden)</b></h3>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

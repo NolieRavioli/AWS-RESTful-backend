@@ -66,7 +66,7 @@ This project was built using AWS Free Tier Lambda and API Gateway to create a in
    After processing, the Lambda function forwards the request to the selected external endpoint, gathers the response, and sends it back to API Gateway. Finally, API Gateway returns the response to the user in the correct format.
 --
 ## [nolanpeet.us](https://nolanpeet.us) (external link)  
-[[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us)]
+[[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us)] (github)
 
 This website was designed to serve as a functional model of my knowledge base and custom framework. The inherent challenges of building a serverless website using AWS Lambda functions was a really interesting
 opportunity to explore the limits and capabilities of serverless architecture. My goal was to create a serverless "blog" where I can showcase updates and portfolio items, all while avoiding an over-reliance on external resources.
@@ -76,7 +76,7 @@ inside the coding environment (I use IDLE). It felt really nice to tab complete 
 pseudo-code or plaintext and have the integrated assistant help me remember syntax!
 
 ## [gfd.sh](https://gfd.sh/)(external link)
-[[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)]
+[[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)] (github)
 
 ### My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.
 

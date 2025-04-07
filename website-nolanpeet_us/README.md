@@ -9,7 +9,7 @@ opportunity to explore the limits and capabilities of serverless architecture. M
 
 I spent a ton of time hand-coding HTML and CSS for the webpage. It was cool  This project was especially exciting because of Amazon Q. I like to use ChatGPT to code but this was my first experience having an integrated assistant 
 inside the coding environment (I use IDLE). It felt really nice to tab complete whole codeblocks with just a single line to nucleate from. Also, if I forget how to do a specific function I can just comment what I want to be done in
-psydo-code or plaintext and have the integrated assistant help me remember syntax!
+pseudo-code or plaintext and have the integrated assistant help me remember syntax!
 
 ## Serverless Architecture
 

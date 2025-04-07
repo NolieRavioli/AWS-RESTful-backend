@@ -75,7 +75,7 @@ I spent a ton of time hand-coding HTML and CSS for the webpage. It was cool  Thi
 inside the coding environment (I use IDLE). It felt really nice to tab complete whole codeblocks with just a single line to nucleate from. Also, if I forget how to do a specific function I can just comment what I want to be done in
 pseudo-code or plaintext and have the integrated assistant help me remember syntax!
 
-## [gfd.sh](https://gfd.sh/)(external link)
+## [gfd.sh](https://gfd.sh/) (external link)
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)] (github)
 
 ### My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.

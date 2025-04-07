@@ -1,5 +1,12 @@
 # [nolanpeet.us](https://nolanpeet.us) (external link)  
 
+### Table of Contents
+- [nolanpeet.us](#nolanpeetus-external-link)
+  - [Intro](#intro)
+  - [Serverless Architecture](#serverless-architecture)
+  - [Issues with Truly Serverless Solutions](#issues-with-truly-serverless-solutions)
+  - [API Gateway](#api-gateway)
+
 ## Intro
 
 This website was designed to serve as a functional model of my knowledge base and custom framework. The inherent challenges of building a serverless website using AWS Lambda functions was a really interesting

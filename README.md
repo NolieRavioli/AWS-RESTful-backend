@@ -93,6 +93,7 @@ This project serves as an in-depth exploration into the power and challenges of 
 ---
 
 ## [gfd.sh](https://gfd.sh/)(external link), My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.
+[[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)]
 
 I started this project by initially storing 12-byte sensor data in **Amazon DynamoDB**. The convenience of a cloud-hosted NoSQL database was appealing. However, I quickly discovered that DynamoDB was storing my tiny 94-bit data points in 1KB increments—leading to storage bloat. It cost me about 2 cents per day, but I was uneasy about the overhead. 
 

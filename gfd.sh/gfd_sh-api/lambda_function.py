@@ -4,6 +4,8 @@ import base64
 import requests
 
 PRE_SHARED_TOKEN = os.environ.get("PRE_SHARED_TOKEN")
+S3_BUCKET = os.environ.get("S3BUCKET")
+OBJECT_KEY = os.environ.get("OBJECTKEY")
 
 def lambda_handler(event, context):
     """Entry point for API Gateway -> Lambda integration."""
@@ -19,7 +21,7 @@ def lambda_handler(event, context):
         
         # Extract token from 'Bearer XXXXXX'
         _, token_value = auth_header.split(" ")
-        if token_value != PRE_SHARED_TOKEN:
+        if token_value != PRE_SHARED_TOKEN: # Used Environment Variable Here
             return response(401, "Invalid token.")
         return post_data(event)
     elif http_method == 'GET':
@@ -67,8 +69,7 @@ def get_data():
         resp = requests.get('https://cpu1.nolp.net/data', timeout=2)
         if resp.status_code == 200:
             # Return that data
-
-            return response(200, resp.text)  # or base64 if it's binary
+            return response(200, resp.text)
         else:
             # fallback to S3
             return get_data_from_s3()
@@ -79,11 +80,8 @@ def get_data():
 def get_data_from_s3():
     """Fetch data from S3 if self-host is unreachable or returns error."""
     s3 = boto3.client('s3')
-    bucket_name = "hondo-cabin"
-    object_key = "YOUR_OBJECT_KEY"
-    
     try:
-        obj = s3.get_object(Bucket=bucket_name, Key=object_key)
+        obj = s3.get_object(Bucket=S3_BUCKET, Key=OBJECT_KEY) # Used Environment Variable Here
         data = obj['Body'].read()
         # Return as text or base64
         return response(200, data.decode('utf-8'))

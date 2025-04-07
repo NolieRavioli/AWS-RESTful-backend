@@ -64,7 +64,7 @@ This project was built using AWS Free Tier Lambda and API Gateway to create a in
 
 5. **Response Aggregation:**  
    After processing, the Lambda function forwards the request to the selected external endpoint, gathers the response, and sends it back to API Gateway. Finally, API Gateway returns the response to the user in the correct format.
---
+---
 ## [nolanpeet.us](https://nolanpeet.us) (external link)  
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us)] (github)
 

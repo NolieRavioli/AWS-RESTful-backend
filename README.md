@@ -1,99 +1,73 @@
 # AWS-RESTful-backend
 
-A comprehensive document describing how my RESTful, free, AWS-powered load-balancer works using serverless architecture.
+A comprehensive document describing how my RESTful, free, AWS-powered websites works using serverless architecture.  
+
+Educational documentation of development process, complete with source code.
 
 ## Intro
 
-This project was built using AWS Free Tier Lambda and API Gateway to create a unique interface that aggregates content from various external sources. The goal was to build a scalable, cost-effective load balancer that also serves as a "blog" for portfolio updates—all without relying on traditional server hosting. By leveraging AWS services, I was able to overcome challenges like data persistence and dynamic routing. This project also marked my first experience integrating an AI coding assistant (ChatGPT) directly within my coding environment (IDLE), streamlining development with rapid prototyping and code generation.
+This project was built using AWS Free Tier Lambda and API Gateway to create a interface that aggregates content from internal Lambda functions and external sources. The goal was to create a no-cost data hosting solution starting with gfd.sh as a cloud-based endpoint for tempurature data. nolanpeet.us is a portfolio website framework that attempts to create a serverless portfolio without external references. I did a lot of html by hand for the finished product, but Amazon Q is so exciting. I like to use ChatGPT to code but this was my first experience having an integrated assistant inside the coding environment (I use IDLE mostly).
 
-## Features
+### Table of Contents
+- AWS-RESTful-backend
+  - [Intro](#intro)
+  - [Architecture Overview](#architecture-overview)
+  - [How It Works](#how-it-works)
+- [nolanpeet.us](#nolanpeetus-external-link)
+- [gfd.sh](#gfdsh-external-link)
+
+## Architecture Overview
 
 - **Serverless Architecture:**  
-  Uses AWS Lambda to run code on-demand without provisioning servers, allowing the system to scale automatically.
+  Uses AWS Lambda to run code on-demand without provisioning servers.
 
 - **API Gateway Integration:**  
-  Exposes RESTful endpoints and manages HTTP request routing using API Gateway’s proxy+ integration, enabling flexible endpoint mapping for GET, POST, and other methods.
+  Exposes RESTful endpoints and manages HTTP request routing using API Gateway’s AWS Lambda integration. Flexible endpoint mapping for GET, POST, other methods.
 
 - **Load Balancing:**  
-  Distributes requests across multiple external endpoints to ensure high availability and reliability.
+  Distributes requests across internal functions and external endpoints for speed as well as high availability and reliability.
 
-- **Cost-Efficiency:**  
-  Designed to operate entirely within the AWS Free Tier, making it ideal for low-traffic or experimental applications.
-
-- **Scalability:**  
-  Automatically adapts to varying levels of incoming traffic thanks to the elasticity of AWS Lambda and API Gateway.
-
-- **Detailed Logging & Monitoring:**  
-  Integrates with AWS CloudWatch for real-time monitoring and troubleshooting of both API Gateway and Lambda functions.
+- **Logging & Monitoring:**  
+  Integrates with AWS CloudWatch for monitoring and troubleshooting of both API Gateway and Lambda functions.
 
 ## How It Works
 
 1. **Request Reception:**  
-   When a user sends an HTTP request, API Gateway receives it and triggers an associated AWS Lambda function. The proxy+ configuration ensures that the entire request—including headers, query strings, and body—is passed directly to Lambda.
+   When a user sends an HTTP request, API Gateway receives it and triggers an associated AWS Lambda function. The entire request—including headers, query strings, and body—is passed directly to Lambda.
 
 2. **Request Processing:**  
-   The Lambda function processes the request by applying custom load-balancing logic. It determines which external endpoint should handle the request based on parameters in the incoming payload.
+   The Lambda function processes the request through custom load-balancing logic.
 
 3. **Endpoint Mapping & HTTP Methods:**  
-   API Gateway is configured to handle multiple HTTP methods:
+   API Gateway is configured to handle HTTP methods:
    - **GET:** Retrieves data from external sources.
    - **POST:** Submits data or triggers specific actions.
    - Additional methods (PUT, DELETE, etc.) can be mapped similarly.
    
-   This mapping ensures that the same URL can support multiple operations, with the Lambda function interpreting and processing each method accordingly.
+   This mapping lets the same URL support multiple operations and endpoints, with the Lambda function interpreting and processing each method accordingly.
 
 4. **Lambda Integration Passthrough:**  
-   A critical part of this setup is the integration passthrough setting. With passthrough enabled, API Gateway delivers the complete, unmodified request payload to the Lambda function. This is essential for preserving data integrity and ensuring that Lambda can process complex requests accurately. Without proper passthrough, you risk losing vital information needed for routing and processing.
+   A critical part of this setup is the **integration passthrough** setting. With passthrough enabled, API Gateway delivers the complete, unmodified request payload to the Lambda function. This lets Lambda process complex requests.
 
 5. **Response Aggregation:**  
    After processing, the Lambda function forwards the request to the selected external endpoint, gathers the response, and sends it back to API Gateway. Finally, API Gateway returns the response to the user in the correct format.
 
-## API Gateway & Lambda Integration Details
-
-### Proxy+ Integration
-
-- **What It Is:**  
-  Proxy+ integration in API Gateway allows all aspects of an HTTP request to be forwarded to Lambda without needing to map each element individually. This simplifies the configuration and provides flexibility when handling dynamic requests.
-
-- **Why It’s Important:**  
-  It minimizes configuration overhead and ensures that any changes in the request format are automatically passed to Lambda, allowing your backend logic to remain adaptable and responsive to different types of requests.
-
-### Endpoint Mapping (GET, POST, etc.)
-
-- **Multiple HTTP Methods:**  
-  API Gateway is configured to handle various HTTP methods through endpoint mapping. This means:
-  - **GET requests** are typically used to retrieve data.
-  - **POST requests** can submit data or trigger specific actions.
-  - Additional methods like **PUT**, **PATCH**, or **DELETE** can be configured to support full CRUD operations.
-  
-- **Custom Mapping:**  
-  This setup enables a single API endpoint to serve multiple functions, with the Lambda function determining the correct action based on the method and parameters provided.
-
-### Lambda Integration Passthrough
-
-- **Critical Setting:**  
-  The passthrough behavior is a key setting in the integration between API Gateway and Lambda. It ensures that the entire HTTP request—including any headers, query parameters, and the request body—is transmitted to Lambda without alteration.
-  
-- **Benefits:**  
-  - **Data Integrity:** Ensures that no critical information is lost or modified during the request handling process.
-  - **Simplicity:** Reduces the need for complex mapping configurations in API Gateway.
-  - **Flexibility:** Allows the Lambda function to handle various types of requests and perform context-aware processing.
-
 ## [nolanpeet.us](https://nolanpeet.us) (external link)  
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us)]
 
-This website was conceived as a functional model of my knowledge base and custom framework. I faced the challenge of building a serverless "blog" where I could display updates and portfolio items without an over-reliance on external resources. I spent a significant amount of time hand-coding HTML and CSS to achieve a polished design, and integrating AWS Lambda functions pushed the envelope on what’s possible with serverless computing.
+This website was designed to serve as a functional model of my knowledge base and custom framework. The inherent challenges of building a serverless website using AWS Lambda functions was a really interesting
+opportunity to explore the limits and capabilities of serverless architecture. My goal was to create a serverless "blog" where I can showcase updates and portfolio items, all while avoiding an over-reliance on external resources.
 
-Notably, this project was enriched by using Amazon Q and having ChatGPT integrated directly within my coding environment (IDLE). The AI assistant made it possible to quickly generate code blocks, recall syntax, and even complete entire functions from simple pseudo-code instructions. This seamless integration has boosted my productivity and enhanced my understanding of both serverless architecture and modern development workflows.
-
-## Conclusion
-
-This project serves as an in-depth exploration into the power and challenges of serverless architecture. By combining AWS Lambda, API Gateway, and custom load-balancing logic, I built a system that is both scalable and cost-effective. Key takeaways include the critical nature of API Gateway’s proxy+ integration, the flexibility afforded by endpoint mapping for different HTTP methods, and the importance of enabling Lambda integration passthrough to maintain data integrity. As I continue to refine this architecture, I look forward to further leveraging serverless technologies to build innovative, resilient web applications.
+I spent a ton of time hand-coding HTML and CSS for the webpage. It was cool  This project was especially exciting because of Amazon Q. I like to use ChatGPT to code but this was my first experience having an integrated assistant 
+inside the coding environment (I use IDLE). It felt really nice to tab complete whole codeblocks with just a single line to nucleate from. Also, if I forget how to do a specific function I can just comment what I want to be done in
+pseudo-code or plaintext and have the integrated assistant help me remember syntax!
 
 ---
 
-## [gfd.sh](https://gfd.sh/)(external link), My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.
+## [gfd.sh](https://gfd.sh/)(external link)
 [[Source Code](https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/gfd.sh)]
+
+### My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.
 
 I started this project by initially storing 12-byte sensor data in **Amazon DynamoDB**. The convenience of a cloud-hosted NoSQL database was appealing. However, I quickly discovered that DynamoDB was storing my tiny 94-bit data points in 1KB increments—leading to storage bloat. It cost me about 2 cents per day, but I was uneasy about the overhead. 
 

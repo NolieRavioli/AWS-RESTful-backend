@@ -2,10 +2,10 @@
 
 ### Table of Contents
 <ol type='1'>
-  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#intro"><li>Intro</li></a>
-  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#serverless-architecture"><li>Serverless Architecture</li></a>
-  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#issues-with-truly-serverless-solutions"><li>Issues with Truly Serverless Solutions</li></a>
-  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#api-gateway"><li>API Gateway</li></a>
+  <a href="#intro"><li>Intro</li></a>
+  <a href="#serverless-architecture"><li>Serverless Architecture</li></a>
+  <a href="#issues-with-truly-serverless-solutions"><li>Issues with Truly Serverless Solutions</li></a>
+  <a href="#api-gateway"><li>API Gateway</li></a>
 </ol>
 
 ## Intro

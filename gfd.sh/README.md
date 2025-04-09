@@ -1,15 +1,39 @@
 # [gfd.sh](https://gfd.sh/)(external link)
 
 ### Table of Contents
-- [gfd.sh](#gfdsh-external-link)
-  - [Introduction](#introduction)
-  - [Architecture Overview](#architecture-overview)
-  - [Lambda Functions Detail](#lambda-functions-detail)
-  - [Frontend Implementation](#frontend-implementation)
-  - [Example Workflow](#example-workflow)
-  - [Challenges & Solutions](#challenges--solutions)
-    - [My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.](#my-journey-from-dynamodb-to-rds-to-timestream-and-self-hosting-with-a-backup)
-  - [Conclusion](#conclusion)
+<ol type='1'>
+  <a href="#introduction"><li>Introduction</li></a>
+  <a href="#architecture-overview"><li>Architecture Overview</li></a>
+  <ol>
+    <a href="#aws-api-gateway-proxy-integration-proxy"><li>AWS API Gateway Proxy Integration (proxy+)</li></a>
+    <ol>
+      <a href="#importance-of-proxy-integration"><li>Importance of Proxy Integration:</li></a>
+    </ol>
+    <a href="#endpoint-mapping-and-http-methods"><li>Endpoint Mapping and HTTP Methods</li></a>
+    <a href="#lambda-integration-passthrough"><li>Lambda Integration Passthrough</li></a>
+  </ol>
+  <a href="#lambda-functions-detail"><li>Lambda Functions Detail</li></a>
+  <ol>
+    <a href="#1-data-processing-lambda"><li>1. Data Processing Lambda</li></a>
+    <ol>
+      <a href="#tasks-performed"><li>Tasks Performed:</li></a>
+    </ol>
+    <a href="#2-data-serving-lambda"><li>2. Data Serving Lambda</li></a>
+    <ol>
+      <a href="#tasks-performed-1"><li>Tasks Performed:</li></a>
+    </ol>
+  </ol>
+  <a href="#frontend-implementation"><li>Frontend Implementation</li></a>
+  <ol>
+    <a href="#key-frontend-features"><li>Key Frontend Features:</li></a>
+  </ol>
+  <a href="#example-workflow"><li>Example Workflow</li></a>
+  <a href="#challenges--solutions"><li>Challenges & Solutions</li></a>
+  <ol>
+    <a href="#my-journey-from-dynamodb-to-rds-to-timestream-and-self-hosting-with-a-backup"><li>My Journey From DynamoDB to RDS to Timestream and Self-hosting with a backup.</li></a>
+  </ol>
+  <a href="#conclusion"><li>Conclusion</li></a>
+</ol>
 
 ## Introduction
 

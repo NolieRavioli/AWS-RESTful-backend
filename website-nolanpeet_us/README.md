@@ -1,11 +1,12 @@
 # [nolanpeet.us](https://nolanpeet.us) (external link)  
 
 ### Table of Contents
-- [nolanpeet.us](#nolanpeetus-external-link)
-  - [Intro](#intro)
-  - [Serverless Architecture](#serverless-architecture)
-  - [Issues with Truly Serverless Solutions](#issues-with-truly-serverless-solutions)
-  - [API Gateway](#api-gateway)
+<ol type='1'>
+  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#intro"><li>Intro</li></a>
+  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#serverless-architecture"><li>Serverless Architecture</li></a>
+  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#issues-with-truly-serverless-solutions"><li>Issues with Truly Serverless Solutions</li></a>
+  <a href="https://github.com/NolieRavioli/AWS-RESTful-backend/tree/main/website-nolanpeet_us#api-gateway"><li>API Gateway</li></a>
+</ol>
 
 ## Intro
 
